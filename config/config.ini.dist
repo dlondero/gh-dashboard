@@ -1,0 +1,3 @@
+default_organization = <insert here your default organization name>
+access_token = <insert here your access token>
+;More about creating Personal API tokens https://github.com/blog/1509-personal-api-tokens
