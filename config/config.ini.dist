@@ -1,3 +1,5 @@
 default_organization = <insert here your default organization name>
+default_filter = mentioned
+default_state = open
 access_token = <insert here your access token>
 ;More about creating Personal API tokens https://github.com/blog/1509-personal-api-tokens

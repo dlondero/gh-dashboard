@@ -23,9 +23,9 @@ Use default organization and filter issues showing the ones where you are `menti
 $ gh-dashboard
 ```
 
-Or specify all the parameters
+Or specify the parameters you want
 ```bash
-$ gh-dashboard <organization> <filter> <state>
+$ gh-dashboard [--org=organization] [--filter=created] [--state=open]
 ```
 
 you can see available `filters` and `states` on the [API documentation](https://developer.github.com/v3/issues/#list-issues).

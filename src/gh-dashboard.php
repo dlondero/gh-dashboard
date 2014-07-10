@@ -10,17 +10,38 @@
 
     $iniConfig = parse_ini_file($config);
 
-    if (!isset($iniConfig['default_organization']) || !isset($iniConfig['access_token'])) {
-        echo "\e[00;31mPlease define your default_organization and access_token in config.ini file.\e[0m\n";
+    if (!isset($iniConfig['default_organization'])
+        || !isset($iniConfig['default_filter'])
+        || !isset($iniConfig['default_state'])
+        || !isset($iniConfig['access_token'])) {
+        echo "\e[00;31mPlease define your default values and/or access_token in config.ini file.\e[0m\n";
         exit(1);
     }
 
-    $defaultOrganization = $iniConfig['default_organization'];
+    $organization = $iniConfig['default_organization'];
+    $filter = $iniConfig['default_filter'];
+    $state = $iniConfig['default_state'];
     $accessToken = $iniConfig['access_token'];
 
-    $organization = isset($argv[1]) ? $argv[1] : $defaultOrganization;
-    $filter = (isset($argv[2]) && in_array($argv[2], ['assigned', 'created', 'mentioned', 'subscribed', 'all'])) ? $argv[2] : 'mentioned';
-    $state = (isset($argv[3]) && in_array($argv[3], ['open', 'closed', 'all'])) ? $argv[3] : 'open';
+    if ($paramList = array_slice($argv, 1)) {
+        foreach ($paramList as $param) {
+            $param = explode('=', $param);
+            $paramType = $param[0];
+            $paramValue = $param[1];
+
+            switch ($paramType) {
+                case '--org':
+                    $organization = isset($paramValue) ? $paramValue : $organization;
+                    break;
+                case '--filter':
+                    $filter = (isset($paramValue) && in_array($paramValue, ['assigned', 'created', 'mentioned', 'subscribed', 'all'])) ? $paramValue : $filter;
+                    break;
+                case '--state':
+                    $state = (isset($paramValue) && in_array($paramValue, ['open', 'closed', 'all'])) ? $paramValue : $state;
+                    break;
+            }
+        }
+    }
 
     $url = "https://api.github.com/orgs/{$organization}/issues?filter={$filter}&state={$state}";
 
