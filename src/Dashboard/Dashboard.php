@@ -7,52 +7,37 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Dashboard extends Command
-{
+class Dashboard extends Command {
+
     protected function configure()
     {
         $this
             ->setName('dashboard')
             ->setDescription('List issues mentioning me in organization dashboard!')
             ->addOption(
-               'organization',
-               null,
-               InputOption::VALUE_REQUIRED,
-               'If set, the task will use the organization provided'
+                'organization',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'If set, the task will use the organization provided'
             )
             ->addOption(
-               'filter',
-               null,
-               InputOption::VALUE_REQUIRED,
-               'If set, the task will filter the issues based on value provided'
+                'filter',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'If set, the task will filter the issues based on value provided'
             )
             ->addOption(
-               'state',
-               null,
-               InputOption::VALUE_REQUIRED,
-               'If set, the task will show only issues in the state provided'
-            )
-        ;
+                'state',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'If set, the task will show only issues in the state provided'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $config = dirname(__FILE__) . '/../../config/config.ini';
-
-        if (!is_file($config)) {
-            $output->writeln('<error>No config.ini file found!</error>');
-            exit(1);
-        }
-
-        $iniConfig = parse_ini_file($config);
-
-        if (!isset($iniConfig['default_organization'])
-            || !isset($iniConfig['default_filter'])
-            || !isset($iniConfig['default_state'])
-            || !isset($iniConfig['access_token'])) {
-            $output->writeln('<error>Please define your default values and/or access_token in config.ini file.</error>');
-            exit(1);
-        }
+        $iniConfig = $this->getConfig($config, $output);
 
         $organization = $iniConfig['default_organization'];
         $filter = $iniConfig['default_filter'];
@@ -72,14 +57,14 @@ class Dashboard extends Command
         $issueList = $this->getIssues($accessToken, $organization, $filter, $state);
 
         $groupedIssueList = [];
-        foreach($issueList as $issue) {
+        foreach ($issueList as $issue) {
             $groupedIssueList[$issue->repository->full_name][] = $issue;
         }
 
         foreach ($groupedIssueList as $repository => $issueList) {
             $output->writeln("<fg=magenta>[$repository]</fg=magenta>");
 
-            foreach($issueList as $issue) {
+            foreach ($issueList as $issue) {
                 $output->writeln(str_repeat(' ', 4) . "<fg=green>$issue->title</fg=green><fg=white> -> $issue->html_url</fg=white>");
             }
         }
@@ -106,5 +91,31 @@ class Dashboard extends Command
         curl_close($ch);
 
         return json_decode($output);
+    }
+
+    /**
+     * @param string $config
+     * @param OutputInterface $output
+     * @return array
+     */
+    protected function getConfig($config, $output)
+    {
+        if (!is_file($config)) {
+            $output->writeln('<error>No config.ini file found!</error>');
+            exit(1);
+        }
+
+        $iniConfig = parse_ini_file($config);
+
+        if (!isset($iniConfig['default_organization'])
+            || !isset($iniConfig['default_filter'])
+            || !isset($iniConfig['default_state'])
+            || !isset($iniConfig['access_token'])
+        ) {
+            $output->writeln('<error>Please define your default values and/or access_token in config.ini file.</error>');
+            exit(1);
+        }
+
+        return $iniConfig;
     }
 }
