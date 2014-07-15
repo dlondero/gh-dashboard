@@ -1,5 +1,10 @@
 {
     "require": {
         "symfony/console": "v2.5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gh\\": "src/"
+        }
     }
 }
