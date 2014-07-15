@@ -12,7 +12,7 @@ class Dashboard extends Command
     protected function configure()
     {
         $this
-            ->setName('dashboard')
+            ->setName('gh-dashboard')
             ->setDescription('List issues mentioning me in organization dashboard!')
             ->addOption(
                 'organization',

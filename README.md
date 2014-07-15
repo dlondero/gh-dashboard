@@ -25,7 +25,7 @@ $ gh-dashboard
 
 Or specify the parameters you want
 ```bash
-$ gh-dashboard [--org=organization] [--filter=created] [--state=open]
+$ gh-dashboard [--organization="..."] [--filter="..."] [--state="..."]
 ```
 
 you can see available `filters` and `states` on the [API documentation](https://developer.github.com/v3/issues/#list-issues).

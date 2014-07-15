@@ -14,7 +14,7 @@ class Application extends ConsoleApplication
      */
     protected function getCommandName(InputInterface $input)
     {
-        return 'dashboard';
+        return 'gh-dashboard';
     }
 
     /**

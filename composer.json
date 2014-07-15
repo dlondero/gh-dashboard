@@ -1,4 +1,16 @@
 {
+    "name": "gh/dashboard",
+    "description": "Missing feature to list issues mentioning me in Github's organization dashboard!",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Daniel Londero",
+            "email": "daniel.londero@gmail.com",
+            "homepage": "http://dlondero.it",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
     "require": {
         "symfony/console": "v2.5.1"
     },
