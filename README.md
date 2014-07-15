@@ -9,7 +9,7 @@ I pinged @github on Twitter a couple of times reporting this missing feature wit
 
 I then looked at the [API](https://developer.github.com/v3/issues/#list-issues) and found that filtering for `mentioned` issues looks quite easy so I decided to write some code in order to consume the API and get a CLI tool to solve the issue.
 
-![gh-dashboard output](https://dl.dropboxusercontent.com/u/6656849/gh-dashboard.png)
+![gh-dashboard output](https://dl.dropboxusercontent.com/u/6656849/gh-dashboard-1.png)
 
 ### Setup
  1. Clone this repository
