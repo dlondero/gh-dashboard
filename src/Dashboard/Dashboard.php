@@ -107,12 +107,16 @@ class Dashboard extends Command {
 
         $iniConfig = parse_ini_file($config);
 
+        if (!isset($iniConfig['access_token'])) {
+            $output->writeln('<error>Please define your access_token in config.ini file.</error>');
+            exit(1);
+        }
+
         if (!isset($iniConfig['default_organization'])
             || !isset($iniConfig['default_filter'])
             || !isset($iniConfig['default_state'])
-            || !isset($iniConfig['access_token'])
         ) {
-            $output->writeln('<error>Please define your default values and/or access_token in config.ini file.</error>');
+            $output->writeln('<error>Please define your default values in config.ini file.</error>');
             exit(1);
         }
 
