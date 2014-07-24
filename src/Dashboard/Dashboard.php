@@ -6,6 +6,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class Dashboard extends Command
 {
@@ -36,13 +38,13 @@ class Dashboard extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = dirname(__FILE__) . '/../../config/config.ini';
-        $iniConfig = $this->getConfig($config, $output);
+        $configPath = $this->getConfigPath();
+        $config = $this->getConfig($configPath, $input, $output);
 
-        $organization = $iniConfig['default_organization'];
-        $filter = $iniConfig['default_filter'];
-        $state = $iniConfig['default_state'];
-        $accessToken = $iniConfig['access_token'];
+        $organization = $config['default_organization'];
+        $filter = $config['default_filter'];
+        $state = $config['default_state'];
+        $accessToken = $config['access_token'];
 
         if ($organizationOption = $input->getOption('organization')) {
             $organization = $organizationOption;
@@ -71,8 +73,8 @@ class Dashboard extends Command
     }
 
     /**
-     * @param string      $accessToken
-     * @param string      $organization
+     * @param string $accessToken
+     * @param string $organization
      * @param string|null $filter
      * @param string|null $state
      * @return array
@@ -94,32 +96,83 @@ class Dashboard extends Command
     }
 
     /**
-     * @param string $config
+     * @param string $configPath
+     * @param InputInterface $input
      * @param OutputInterface $output
      * @return array
      */
-    protected function getConfig($config, $output)
+    protected function getConfig($configPath, $input, $output)
     {
-        if (!is_file($config)) {
-            $output->writeln('<error>No config.ini file found!</error>');
-            exit(1);
+        $helper = $this->getHelper('question');
+        $writeConfig = false;
+
+        if (!is_dir($this->getConfigDirPath())) {
+            mkdir($this->getConfigDirPath(), 0755);
+            file_put_contents($configPath, null);
         }
 
-        $iniConfig = parse_ini_file($config);
+        $config = json_decode(file_get_contents($configPath), true);
 
-        if (!isset($iniConfig['access_token'])) {
-            $output->writeln('<error>Please define your access_token in config.ini file.</error>');
-            exit(1);
+        if (!isset($config['access_token'])) {
+            $question = new Question('<question>Please enter your access_token: </question>');
+            $accessToken = $helper->ask($input, $output, $question);
+
+            $config['access_token'] = $accessToken;
+            $writeConfig = true;
         }
 
-        if (!isset($iniConfig['default_organization'])
-            || !isset($iniConfig['default_filter'])
-            || !isset($iniConfig['default_state'])
-        ) {
-            $output->writeln('<error>Please define your default values in config.ini file.</error>');
-            exit(1);
+        if (!isset($config['default_organization'])) {
+            $question = new Question('<question>Please enter your default organization: </question>');
+            $defaultOrganization = $helper->ask($input, $output, $question);
+
+            $config['default_organization'] = $defaultOrganization;
+            $writeConfig = true;
         }
 
-        return $iniConfig;
+        if (!isset($config['default_filter'])) {
+            $question = new ChoiceQuestion(
+                '<question>Please select your default filter (defaults to mentioned)</question>',
+                array('assigned', 'created', 'mentioned', 'subscribed', 'all'),
+                '2'
+            );
+            $defaultFilter = $helper->ask($input, $output, $question);
+
+            $config['default_filter'] = $defaultFilter;
+            $writeConfig = true;
+        }
+
+        if (!isset($config['default_state'])) {
+            $question = new ChoiceQuestion(
+                '<question>Please select your default state (defaults to open)</question>',
+                array('open', 'closed', 'all'),
+                '0'
+            );
+            $defaultState = $helper->ask($input, $output, $question);
+
+            $config['default_state'] = $defaultState;
+            $writeConfig = true;
+        }
+
+        if ($writeConfig && false !== file_put_contents($configPath, json_encode($config))) {
+            $output->writeln("<info>Configuration written correctly to $configPath.</info>");
+        }
+
+        return $config;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getConfigDirPath()
+    {
+        return $_SERVER['HOME'] . DIRECTORY_SEPARATOR . '.gh-dashboard';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getConfigPath()
+    {
+        return $this->getConfigDirPath() . DIRECTORY_SEPARATOR . 'config.json';
     }
 }
