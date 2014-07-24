@@ -1,5 +1,5 @@
 {
-    "name": "gh/dashboard",
+    "name": "dlondero/gh-dashboard",
     "description": "Add missing feature to list issues mentioning me in Github's organization dashboard!",
     "type": "project",
     "authors": [

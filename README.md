@@ -21,7 +21,7 @@ I decided to write some code in order to consume the API and get a CLI tool to s
 #### 1) Installing system-wide using composer (recommended)
 
 ```bash
-$ composer global require gh/dashboard=dev-master@dev
+$ composer global require dlondero/gh-dashboard=dev-master@dev
 ```
 
 If it is the first time you globally install a dependency then make sure
@@ -30,7 +30,7 @@ you include `~/.composer/vendor/bin` in $PATH as shown [here](http://getcomposer
 ##### Always keep your gh/dashboard installation up to date:
 
 ```bash
-$ composer global update gh/dashboard
+$ composer global update dlondero/gh-dashboard
 ```
 
 #### 2) Installing manually:
