@@ -1,6 +1,6 @@
 {
     "name": "gh/dashboard",
-    "description": "Missing feature to list issues mentioning me in Github's organization dashboard!",
+    "description": "Add missing feature to list issues mentioning me in Github's organization dashboard!",
     "type": "project",
     "authors": [
         {
