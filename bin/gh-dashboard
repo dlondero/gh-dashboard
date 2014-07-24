@@ -1,7 +1,25 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+$paths[] = __DIR__.'/../vendor';
+$paths[] = __DIR__.'/../../..';
+
+$filename = null;
+
+foreach ($paths as $path) {
+    $filePath = $path.'/autoload.php';
+    if (file_exists($filePath)) {
+        $filename = $filePath;
+        break;
+    }
+}
+
+if (null === $filename) {
+    echo "Cannot find an autoload.php file, have you executed composer install command?\n";
+    exit(1);
+}
+
+require_once $filename;
 
 use Gh\Dashboard\Application;
 
