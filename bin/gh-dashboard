@@ -1,25 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-$paths[] = __DIR__.'/../vendor';
-$paths[] = __DIR__.'/../../..';
-
-$filename = null;
-
-foreach ($paths as $path) {
-    $filePath = $path.'/autoload.php';
-    if (file_exists($filePath)) {
-        $filename = $filePath;
-        break;
-    }
-}
-
-if (null === $filename) {
-    echo "Cannot find an autoload.php file, have you executed composer install command?\n";
-    exit(1);
-}
-
-require_once $filename;
+require __DIR__.'/../src/bootstrap.php';
 
 use Gh\Dashboard\Application;
 
