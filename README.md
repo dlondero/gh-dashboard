@@ -16,6 +16,8 @@ I decided to write some code in order to consume the API and get a CLI tool to s
 
 ![gh-dashboard output](https://dl.dropboxusercontent.com/u/6656849/gh-dashboard-1.png)
 
+If you want to read a more in depth story about gh-dashboard you can do it on this [blog post](http://dlondero.it/oss/github/2014/07/25/gh-dashboard.html).
+
 ### Install
 
 #### 1) Installing system-wide using composer (recommended)
