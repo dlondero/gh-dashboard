@@ -18,11 +18,16 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class DashboardTest extends \PHPUnit_Framework_TestCase
 {
-    public function testOutput()
+    public function testOutputDefault()
     {
         $dashboardMock = $this->getMock('Gh\Dashboard\Dashboard', array('getConfig', 'getIssues'));
         $dashboardMock->expects($this->once())->method('getConfig')->willReturn($this->getConfig());
-        $dashboardMock->expects($this->once())->method('getIssues')->willReturn($this->getIssues());
+        $dashboardMock->expects($this->once())->method('getIssues')->with(
+            $this->equalTo('12345abcde'),
+            $this->equalTo('foo'),
+            $this->equalTo('mentioned'),
+            $this->equalTo('open')
+        )->willReturn($this->getIssues());
 
         $application = new Application();
         $dashboardMock->setApplication($application);
