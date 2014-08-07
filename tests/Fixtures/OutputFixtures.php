@@ -18,4 +18,9 @@ class OutputFixtures
 [foo/bar]
     Found a bug -> https://github.com/foo/bar/issues/1347
 EOT;
+
+    const NO_ISSUES = <<<EOT
+w00t! Seems like you're done with all issues. Or maybe your params are wrong?
+EOT;
+
 }

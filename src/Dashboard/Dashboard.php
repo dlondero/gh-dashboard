@@ -66,6 +66,10 @@ class Dashboard extends Command
         }
 
         $issueList = $this->getIssues($accessToken, $organization, $filter, $state);
+        if (!is_array($issueList) || empty($issueList)) {
+            $output->writeln("<fg=red>w00t! Seems like you're done with all issues. Or maybe your params are wrong?</fg=red>");
+            return;
+        }
 
         $groupedIssueList = [];
         foreach ($issueList as $issue) {

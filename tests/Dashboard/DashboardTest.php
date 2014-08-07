@@ -38,6 +38,39 @@ class DashboardTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(OutputFixtures::ISSUE_LIST, trim($commandTester->getDisplay(true)));
     }
 
+    public function testOutputNoIssues()
+    {
+        $dashboardMock = $this->getMock('Gh\Dashboard\Dashboard', array('getConfig', 'getIssues'));
+        $dashboardMock->expects($this->once())->method('getConfig')->willReturn($this->getConfig());
+        $dashboardMock->expects($this->once())->method('getIssues')->willReturn(array());
+
+        $application = new Application();
+        $dashboardMock->setApplication($application);
+
+        $commandTester = new CommandTester($dashboardMock);
+        $commandTester->execute(array());
+
+        $this->assertEquals(OutputFixtures::NO_ISSUES, trim($commandTester->getDisplay(true)));
+    }
+
+    public function testInputParams()
+    {
+        $dashboardMock = $this->getMock('Gh\Dashboard\Dashboard', array('getConfig', 'getIssues'));
+        $dashboardMock->expects($this->once())->method('getConfig')->willReturn($this->getConfig());
+        $dashboardMock->expects($this->once())->method('getIssues')->with(
+            $this->equalTo('12345abcde'),
+            $this->equalTo('bar'),
+            $this->equalTo('created'),
+            $this->equalTo('closed')
+        )->willReturn($this->getIssues());
+
+        $application = new Application();
+        $dashboardMock->setApplication($application);
+
+        $commandTester = new CommandTester($dashboardMock);
+        $commandTester->execute(array('--organization' => 'bar', '--filter' => 'created', '--state' => 'closed'));
+    }
+
     private function getConfig() {
         return [
             'access_token' => '12345abcde',
