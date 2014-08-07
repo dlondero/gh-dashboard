@@ -1,6 +1,8 @@
 gh-dashboard
 ============
 
+[![Build Status](https://travis-ci.org/dlondero/gh-dashboard.svg?branch=master)](https://travis-ci.org/dlondero/gh-dashboard)
+
 Command line dashboard for GitHub
 
 GitHub has a very nice organization dashboard where you can see all issues of the repositories of the org and use some filters to control issues
