@@ -1,3 +1,4 @@
+bin/*
 config/config.ini
-vendor/
 composer.lock
+vendor/
